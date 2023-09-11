@@ -24,6 +24,11 @@ const app = express();
 const HTTP_PORT = process.env.PORT || 8080;
 // Or use some other port number that you like better
 
+const CompaniesDB = require("./modules/companiesDB.js");
+const db = new CompaniesDB();
+
+
+
 // Add support for incoming JSON entities
 // app.use(bodyParser.json());
 app.use(express.json()); // built-in body-parser
@@ -35,12 +40,69 @@ app.get("/", (req,res) => {
   });
   
 
-app.listen(HTTP_PORT,onHttpStart);    
+//add new company
+app.post('/api/companies', (req, res) => {
+    db.addNewCompany(req.body).then((data)=>{
+        res.status(201).json(data);
+    }).catch((err)=>{
+        res.status(500).json(err);
+    })
+  });
+
+
+// Get all companies
+app.get("/api/company/:name", (req, res) => { // 
+  db.getCompanyByName(req.params.name).then((data)=> {
+      console.log("success to get a company");
+      res.status(200).json(data);
+    }).catch((err)=>{
+        res.status(500).json(err);
+    })
+
+  });
+
+
+// Get all companies
+app.get("/api/companies", (req, res) => { // 
+  let page = req.query.page ? req.query.page : 0;
+
+  db.getAllCompanies(page,req.query.perPage,req.query.tag).then((data)=> {
+      res.status(200).json(data);
+  }).catch((err)=>{
+      res.status(500).json(err);
+  })
+});
+
+//update a company
+app.put("/api/company/:name", (req, res) => { // 
+  db.updateCompanyByName(req.body, req.params.name).then((data)=> {
+      res.status(200).json(data);
+  }).catch((err)=>{
+      res.status(500).json(err);
+  })
+});
+
+
+//delete a company by name
+app.delete("/api/company/:name", (req,res) => {
+  db.deleteCompanyByName(req.params.name).then((data) => {
+    res.status(200).json(data);
+  }).catch((err)=>{
+    res.status(500).json(err);
+  })
+});
 
 
 
 
-function onHttpStart() {
-    console.log("Express http server listening on: " + HTTP_PORT + " Path " + path.join(__dirname,"/views/about.html"));
-}
+//http service setup and db connection
+db.initialize(process.env.MONGODB_CONN_STRING).then(()=>{
+    app.listen(HTTP_PORT, ()=>{
+        console.log(`server listening on: ${HTTP_PORT}`);
+    });
+}).catch((err)=>{
+    console.log(err);
+});
+
+
 
