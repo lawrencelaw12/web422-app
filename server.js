@@ -86,7 +86,7 @@ app.put("/api/company/:name", (req, res) => { //
 //delete a company by name
 app.delete("/api/company/:name", (req,res) => {
   db.deleteCompanyByName(req.params.name).then((data) => {
-    res.status(204).json(data);
+    res.status(204).end();
   }).catch((err)=>{
     res.status(500).json(err);
   })
