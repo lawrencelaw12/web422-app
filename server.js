@@ -76,7 +76,8 @@ app.get("/api/companies", (req, res) => { //
 //update a company
 app.put("/api/company/:name", (req, res) => { // 
   db.updateCompanyByName(req.body, req.params.name).then((data)=> {
-      res.status(200).json(data);
+      res.status(200).json({message: `updated company with name: ${req.params.name}`});
+      
   }).catch((err)=>{
       res.status(500).json(err);
   })
@@ -86,7 +87,7 @@ app.put("/api/company/:name", (req, res) => { //
 //delete a company by name
 app.delete("/api/company/:name", (req,res) => {
   db.deleteCompanyByName(req.params.name).then((data) => {
-    res.status(204).end();
+    res.status(200).json({message: `deleted company with name: ${req.params.name}`});
   }).catch((err)=>{
     res.status(500).json(err);
   })
