@@ -1,11 +1,11 @@
 
 /*********************************************************************************
-*  WEB422 – Assignment 1
+*  WEB422 – Assignment 2
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
 *  No part of this assignment has been copied manually or electronically from any other source
 *  (including web sites) or distributed to other students.
 * 
-*  Name: Chi Man Law Student ID: 170713218 Date: Sep 15, 2023
+*  Name: Chi Man Law Student ID: 170713218 Date: Sep 20, 2023
 *  Cyclic Link: https://brave-deer-lingerie.cyclic.app/
 *
 ********************************************************************************/ 
@@ -32,11 +32,12 @@ const db = new CompaniesDB();
 // Add support for incoming JSON entities
 // app.use(bodyParser.json());
 app.use(express.json()); // built-in body-parser
-
 app.use(cors());
+app.use(express.static("public"));
 
 app.get("/", (req,res) => {
-    res.json({"message":"This is a REST API"})
+    res.redirect("/index");
+    //res.json({"message":"This is a REST API"})
   });
   
 
@@ -50,10 +51,9 @@ app.post('/api/companies', (req, res) => {
   });
 
 
-// Get all companies
+// Get a company
 app.get("/api/company/:name", (req, res) => { // 
   db.getCompanyByName(req.params.name).then((data)=> {
-      console.log("success to get a company");
       res.status(200).json(data);
     }).catch((err)=>{
         res.status(500).json(err);
@@ -99,7 +99,7 @@ app.delete("/api/company/:name", (req,res) => {
 //http service setup and db connection
 db.initialize(process.env.MONGODB_CONN_STRING).then(()=>{
     app.listen(HTTP_PORT, ()=>{
-        console.log(`server listening on: ${HTTP_PORT}`);
+      console.log("Express http server listening on: " + HTTP_PORT + " Path " + __dirname);
     });
 }).catch((err)=>{
     console.log(err);
