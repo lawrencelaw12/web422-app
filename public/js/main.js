@@ -1,3 +1,16 @@
+
+/*********************************************************************************
+*  WEB422 – Assignment 2
+*  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  
+*  No part of this assignment has been copied manually or electronically from any other source
+*  (including web sites) or distributed to other students.
+* 
+*  Name: Chi Man Law Student ID: 170713218 Date: Sep 22, 2023
+*  Cyclic Link: https://brave-deer-lingerie.cyclic.app/
+*
+********************************************************************************/ 
+
+
 var page = 1;
 var perPage = 10;
 
@@ -7,6 +20,19 @@ function loadCompanyData(tag=null) {
     
     //
     const apiUrl = `/api/companies?page=${page}&perPage=${perPage}${tag !== null ? `&tag=${tag}` : ""}`;
+
+    if (tag !== null){
+        page = 1;
+          // Hide pagination control
+        const paginationElement = document.querySelector('.pagination');
+        paginationElement.classList.add('d-none');
+
+    } 
+    else {
+        const paginationElement = document.querySelector('.pagination');
+        paginationElement.classList.remove('d-none');
+
+    }
     console.log("ApiUrlIs",apiUrl);
     
     fetch(apiUrl)
@@ -53,20 +79,23 @@ function loadCompanyData(tag=null) {
 
 function companyObjectToTableRowTemplate (post){
     var firstTwoTags="--";
+   // var first_name="";
+   // var last_name="";
     if (post.tag_list) {
-        firstTwoTags = post.tag_list.split(', ').slice(0,2).join(", ");
+        firstTwoTags = post?.tag_list.split(', ').slice(0,2).join(", ");
     }
-      
-    return  `<tr data-id=${post.name}>
-    <td>${post.name}</td>
-    <td>${post.category_code}</td>
-    <td>${post.description}</td>
-    <td>${post.founded_month === null ? "--" : post.founded_month }/${post.founded_day === null ? "--": post.founded_day}/${post.founded_year===null ? "--" : post.founded_year}</td>
-    <td>${post.relationships[0].person.first_name} ${post.relationships[0].person.last_name}</td>
-    <td>${post.offices[0].city},${post.offices[0].state_code},${post.offices[0].country_code}</td>
-    <td>${ (post.number_of_employees) ? post.number_of_employees : "--" }</td>
+
+
+    return  `<tr data-id="${post.name}">
+    <td>${post?.name}</td>
+    <td>${post?.category_code}</td>
+    <td>${post?.description}</td>
+    <td>${post?.founded_month === null ? "--" : post?.founded_month }/${post?.founded_day === null ? "--": post?.founded_day}/${post?.founded_year===null ? "--" : post?.founded_year}</td>
+    <td> ${post?.relationships[0]?.person?.first_name} ${post?.relationships[0]?.person?.last_name}</td>
+    <td>${post?.offices[0]?.city},${post?.offices[0]?.state_code},${post?.offices[0]?.country_code}</td>
+    <td>${(post?.number_of_employees) ? post?.number_of_employees : "--" }</td>
     <td>${firstTwoTags}</td>
-    <td>${post.homepage_url}</td>
+    <td>${post?.homepage_url}</td>
     </tr>`;
 
 }
@@ -78,7 +107,7 @@ function companyDetailToModal(post){
     let month = (post.founded_month) ? post.founded_month : null;
     let day = (post.founded_day) ?  post.founded_day : null;
     let date = new Date(year, month - 1, day).toDateString();
-    let people_list = `${post.relationships.map((item) => item.person.first_name + " " + item.person.last_name + " (" + ((item.title) ? item.title : "n/a") +") " )}`
+    let people_list = `${post?.relationships.map((item) => item.person.first_name + " " + item.person.last_name + " (" + ((item.title) ? item.title : "n/a") +") " )}`
 
 
   //date.toLocaleString("en-US", options)
