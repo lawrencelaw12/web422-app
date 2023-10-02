@@ -19,7 +19,7 @@ function loadCompanyData(tag=null) {
     document.querySelector('#current-page').textContent = page;
     
     //
-    const apiUrl = `/api/companies?page=${page}&perPage=${perPage}${tag !== null ? `&tag=${tag}` : ""}`;
+    const apiUrl = `https://brave-deer-lingerie.cyclic.app/api/companies?page=${page}&perPage=${perPage}${tag !== null ? `&tag=${tag}` : ""}`;
 
     if (tag !== null){
         page = 1;
@@ -50,7 +50,7 @@ function loadCompanyData(tag=null) {
                                     let clickedId = row.getAttribute('data-id');
                                     console.log('clickedId:', clickedId);
 
-                                    const apiUrl2 = `/api/company/${clickedId}`;
+                                    const apiUrl2 = `https://brave-deer-lingerie.cyclic.app/api/company/${clickedId}`;
         
                                     fetch(apiUrl2)
                                     .then((res) => res.json())
