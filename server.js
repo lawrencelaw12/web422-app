@@ -32,12 +32,11 @@ const db = new CompaniesDB();
 // Add support for incoming JSON entities
 // app.use(bodyParser.json());
 app.use(express.json()); // built-in body-parser
+
 app.use(cors());
-app.use(express.static("public"));
 
 app.get("/", (req,res) => {
-    res.redirect("/index");
-    //res.json({"message":"This is a REST API"})
+    res.json({"message":"This is a REST API"})
   });
   
 
@@ -51,9 +50,10 @@ app.post('/api/companies', (req, res) => {
   });
 
 
-// Get a company
+// Get all companies
 app.get("/api/company/:name", (req, res) => { // 
   db.getCompanyByName(req.params.name).then((data)=> {
+      console.log("success to get a company");
       res.status(200).json(data);
     }).catch((err)=>{
         res.status(500).json(err);
@@ -99,7 +99,7 @@ app.delete("/api/company/:name", (req,res) => {
 //http service setup and db connection
 db.initialize(process.env.MONGODB_CONN_STRING).then(()=>{
     app.listen(HTTP_PORT, ()=>{
-      console.log("Express http server listening on: " + HTTP_PORT + " Path " + __dirname);
+        console.log(`server listening on: ${HTTP_PORT}`);
     });
 }).catch((err)=>{
     console.log(err);
