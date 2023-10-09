@@ -84,7 +84,7 @@ module.exports = class companiesDB {
     let findBy = tag ? { tag_list: new RegExp(tag, "i") } : {};
 
     if (+page && +perPage) {
-      return this.Company.find(findBy).sort({ year: +1 }).skip((page - 1) * +perPage).limit(+perPage).exec();
+      return this.Company.find(findBy).sort({ founded_year: -1 }).skip((page - 1) * +perPage).limit(+perPage).exec();
     }
 
     return Promise.reject(new Error('page and perPage query parameters must be valid numbers'));
